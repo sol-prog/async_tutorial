@@ -1,8 +1,7 @@
 #include <future>
 #include <iostream>
 #include <cmath>
-#include <sstream>
-#include <iomanip>
+#include <string>
 #include <chrono>
 #include "ppm.h"
 #include "PerlinNoise.h"
@@ -38,15 +37,16 @@ void make_perlin_noise(int id, int id_width, double z) {
 		}
 	}
 
-	// generate a unique name from id, example 
-	std::ostringstream name (std::ostringstream::out);
-	name << std::setiosflags(std::ios::right);
-	name << std::setfill('0');
-	name << "img_";
-	name << std::setw(id_width) << id;
-	name << ".ppm";
+	// generate a unique name from id
+	std::string tmp, name;
+	tmp = std::to_string(id);
+	if (int diff = id_width - tmp.length()) {
+		for(int i = 0; i < diff; ++i) name += "0";
+	}
+	name = "img_" + name + tmp + ".ppm";
+
 	// Save the image in a PPM file
-	image.write(name.str());	
+	image.write(name);	
 }
 
 int main() {
