@@ -67,7 +67,7 @@ void make_perlin_noise(int id, int id_width, double z) {
 		name = "img_" + name + tmp + ".ppm";
 
 		// Save the image in a PPM file
-		image.write(name.str());	
+		image.write(name);	
 }
 
 // Control the numbers of threads used
