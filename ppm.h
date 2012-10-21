@@ -10,6 +10,7 @@ class ppm {
     //info about the PPM file (height and width)
     unsigned int nr_lines;
     unsigned int nr_columns;
+    std::vector<char> buff;
 
 public:
     //arrays for storing the R,G,B values

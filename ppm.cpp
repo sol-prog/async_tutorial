@@ -2,11 +2,11 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include <string>
 
 #include "ppm.h"
 
 //init with default values
-
 void ppm::init() {
     width = 0;
     height = 0;
@@ -14,20 +14,17 @@ void ppm::init() {
 }
 
 //create a PPM object
-
 ppm::ppm() {
     init();
 }
 
 //create a PPM object and fill it with data stored in fname 
-
 ppm::ppm(const std::string &fname) {
     init();
     read(fname);
 }
 
 //create an "epmty" PPM image with a given width and height;the R,G,B arrays are filled with zeros
-
 ppm::ppm(const unsigned int _width, const unsigned int _height) {
     init();
     width = _width;
@@ -36,6 +33,8 @@ ppm::ppm(const unsigned int _width, const unsigned int _height) {
     nr_columns = width;
     size = width*height;
 
+    buff.resize(3*size);
+
     // fill r, g and b with 0
     r.resize(size);
     g.resize(size);
@@ -43,7 +42,6 @@ ppm::ppm(const unsigned int _width, const unsigned int _height) {
 }
 
 //read the PPM image from fname
-
 void ppm::read(const std::string &fname) {
     std::ifstream inp(fname.c_str(), std::ios::in | std::ios::binary);
     if (inp.is_open()) {
@@ -100,7 +98,6 @@ void ppm::read(const std::string &fname) {
 }
 
 //write the PPM image in fname
-
 void ppm::write(const std::string &fname) {
     std::ofstream inp(fname.c_str(), std::ios::out | std::ios::binary);
     if (inp.is_open()) {
@@ -111,15 +108,13 @@ void ppm::write(const std::string &fname) {
         inp << height << "\n";
         inp << max_col_val << "\n";
 
-        char aux;
+        unsigned int ps = 0;
         for (unsigned int i = 0; i < size; ++i) {
-            aux = (char) r[i];
-            inp.write(&aux, 1);
-            aux = (char) g[i];
-            inp.write(&aux, 1);
-            aux = (char) b[i];
-            inp.write(&aux, 1);
+            buff[ps] = (char) r[i]; ps++;
+            buff[ps] = (char) g[i]; ps++;
+            buff[ps] = (char) b[i]; ps++;
         }
+        inp.write(&buff[0], 3*size);
     } else {
         std::cout << "Error. Unable to open " << fname << std::endl;
     }
